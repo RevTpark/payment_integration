@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Page</title>
+</head>
+    <body>
+        {% with messages = get_flashed_messages() %}
+         {% if messages %}
+               {% for message in messages %}
+                    <div>{{ message }}</div>
+               {% endfor %}
+         {% endif %}
+      {% endwith %}
+        <h2>
+            ENTER YOUR DETAILS TO PROCEED
+        </h2>
+        <form method="POST" action="pay">
+            <div>
+                <label>Name:</label>
+                <input name="username" id="username" placeholder="John Smith" type="text" required>
+            </div>
+            <br>
+            <div>
+                <label>Email:</label>
+                <input name="email" id="email" placeholder="email@address.com" type="email" required>
+            </div>
+            <br>
+            <div>
+                <label>Contact:</label>
+                <input name="contact" id="contact" placeholder="XXX XXX XXXX" type="text" required>
+            </div>
+            <br>
+            <div>
+                <label>Number of units:</label>
+                <input name="units" id="units" type="number" min="1" placeholder="1" required>
+                (Each unit costs ₹500)
+            </div>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+    </body>
+</html>

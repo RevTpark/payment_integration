@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Refund Page</title>
+</head>
+<body>
+    <h1>Welcome to Refund Screen</h1>
+    <div>
+        <h3>Enter the details to initiate a Refund</h3>
+    </div>
+    <form method="POST" action="{{ url_for('refund_process') }}">
+        <div>
+            <label>Payment ID:</label>
+            <input value="{{ data.payment_id }}" type="text" name="payment_id">
+        </div>
+        <br>
+        <div>
+            <label>Amount: ₹</label>
+            <input value="{{ data.amount//100 }}" type="text" name="amount">
+        </div>
+        <br>
+        <div>
+            <label>Reason: </label>
+            <select name="reason">
+                <option value="option1">Wrong purchase/Incorrect order placed</option>
+                <option value="option2">Unintentional purchase</option>
+                <option value="other">Other</option>
+            </select>
+            <br><br>
+            <label>Other: </label>
+            <input name="other_reason" placeholder="Mention any other reason here.....">
+        </div>
+        <br>
+        <input type="submit">
+    </form>
+</body>
+</html>

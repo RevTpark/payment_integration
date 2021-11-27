@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Payment</title>
+</head>
+<body>
+    <h2>Confirm payment of ₹{{ details['payment']['amount']//100 }}.00</h2>
+    <form method="POST">
+        <button id="rzp-button1">Pay</button>
+    </form>
+    <form id="test_form" style="display:none;" method="POST" action="{{ url_for('pay_verify') }}">
+        <input name="payment_id" type="text" id="payment_id">
+        <input name="order_id" type="text" id="order_id">
+        <input name="signature" type="text" id="signature">
+    </form>
+    <form id="failed_form" action="{{ url_for('pay_failure') }}" style="display:none;">
+
+    </form>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+    var options = {
+        "key": "rzp_test_g2czXPqvqxTfpH", // Enter the Key ID generated from the Dashboard
+        "amount": {{ details['payment']['amount'] }}, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Sandbox",
+        "description": "Test Transaction to buy",
+        "order_id": "{{ details['payment']['id'] }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 2
+        "handler": function (response){
+            console.log(
+                {
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                }
+            );
+            document.getElementById('payment_id').setAttribute('value', response.razorpay_payment_id);
+            document.getElementById('order_id').setAttribute('value', response.razorpay_order_id);
+            document.getElementById('signature').setAttribute('value', response.razorpay_signature);
+            document.getElementById('test_form').submit();
+        },
+        "prefill": {
+            "name": '{{ details['name'] }}',
+            "email": '{{ details['email'] }}',
+            "contact": "9999999999"
+        },
+        "theme": {
+            "color": "#99cc33"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+            document.getElementById('failed_form').submit();
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+    </script>
+</body>
+</html>

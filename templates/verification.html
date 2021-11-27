@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verification</title>
+</head>
+<body>
+    {% if not data.status %}
+        <h1>PAYMENT WAS SUCCESSFUL AND VERIFIED</h1>
+        <h3>Please store the data for future reference</h3>
+        <div>
+            <strong>Payment ID:</strong> {{ data.payment_id }}
+        </div>
+        <div>
+            <strong>Order ID:</strong> {{ data.order_id }}
+        </div>
+        <br>
+        <button onclick="handleSubmit()">Get refund</button>
+        <form action="{{ url_for('refund') }}" id="redirect_form" method="POST">
+            <input name="payment_id" id="payment_id" style="display:none;">
+        </form>
+    {% else %}
+        <h1>PAYMENT WAS SUCCESSFUL BUT NOT VERIFIED</h1>
+    {% endif %}
+    <br>
+    <form action="{{ url_for('home') }}">
+        <button type="submit">Home</button>
+    </form>
+    <script>
+        function handleSubmit(){
+            var pId = '{{ data.payment_id }}';
+            document.getElementById('payment_id').setAttribute('value', pId);
+            document.getElementById('redirect_form').submit()
+        }
+    </script>
+</body>
+</html>
